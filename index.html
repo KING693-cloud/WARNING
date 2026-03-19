@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>⚠️ ERROR: OVERRIDE</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      width: 100%; height: 100%;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Arial Black', sans-serif;
+      overflow: hidden;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    /* WARNING PHASE */
+    #warning-screen {
+      text-align: center;
+      padding: 30px;
+      z-index: 100;
+      border: 5px solid #ff0000;
+      background: #000;
+    }
+    h1 { color: #ff0000; font-size: 3rem; margin-bottom: 20px; animation: blink 0.5s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    
+    .btn-wrap { display: flex; flex-direction: column; gap: 20px; }
+    button {
+      padding: 20px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+    }
+    .continue { background-color: #111; color: #f00; border: 2px solid #f00; }
+    .goback { background-color: #25D366; color: white; } /* WhatsApp Green */
+
+    /* FOCUS PHASE */
+    #focus-screen {
+      display: none;
+      text-align: center;
+    }
+    .white-dot {
+      width: 2px;
+      height: 2px;
+      background-color: #fff;
+      border-radius: 50%;
+      margin: 50px auto;
+      box-shadow: 0 0 15px 5px #fff;
+    }
+
+    /* THE CHAOS CANVAS */
+    #zoomCanvas {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="warning-screen">
+    <h1>SOLOMON WARNED YOU</h1>
+    <p style="margin-bottom:20px;">YOU CHOSE DISASTER.</p>
+    <div class="btn-wrap">
+      <button class="goback" onclick="window.location.href='whatsapp://'">RETURN TO SAFETY</button>
+      <button class="continue" onclick="startTrap()">I INSIST (DESTRUCTION)</button>
+    </div>
+  </div>
+
+  <div id="focus-screen">
+    <p style="color:#666">RECALIBRATING SENSES...</p>
+    <div class="white-dot"></div>
+    <p>STARE DEEP INTO THE DOT</p>
+    <p>DO NOT LOOK AWAY</p>
+    <h2 id="timer-text" style="font-size: 5rem; color: #333;">5</h2>
+  </div>
+
+  <canvas id="zoomCanvas"></canvas>
+
+  <script>
+    const warn = document.getElementById('warning-screen');
+    const focus = document.getElementById('focus-screen');
+    const timer = document.getElementById('timer-text');
+    const canvas = document.getElementById('zoomCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let w, h;
+    let offset = 0;
+    const speed = 0.45; // INSANE SPEED
+    const layers = 120; // HIGH DENSITY
+
+    function startTrap() {
+      warn.style.display = 'none';
+      focus.style.display = 'block';
+      let count = 5;
+      const cd = setInterval(() => {
+        count--;
+        timer.innerText = count;
+        if(count <= 0) {
+          clearInterval(cd);
+          goBerserk();
+        }
+      }, 1000);
+    }
+
+    function goBerserk() {
+      focus.style.display = 'none';
+      canvas.style.display = 'block';
+      resize();
+      render();
+    }
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    window.onresize = resize;
+
+    function render() {
+      // THE BLINDING STROBE EFFECT
+      // Alternates background between black and white every frame
+      ctx.fillStyle = (Math.floor(offset * 10) % 2 === 0) ? '#000' : '#fff';
+      ctx.fillRect(0, 0, w, h);
+      
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(offset * 0.2); // Added rotation for dizziness
+
+      for (let i = 0; i < layers; i++) {
+        const scale = Math.pow(0.82, i + (offset % 1));
+        const size = 5000 * scale; 
+
+        ctx.beginPath();
+        // High-speed geometric mutation
+        if (i % 3 === 0) {
+          ctx.rect(-size / 2, -size / 2, size, size);
+        } else if (i % 3 === 1) {
+          ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+        } else {
+          // Triangles for extra sharpness
+          ctx.moveTo(0, -size / 2);
+          ctx.lineTo(size / 2, size / 2);
+          ctx.lineTo(-size / 2, size / 2);
+          ctx.closePath();
+        }
+        
+        // MULTI-COLOUR BLINDING STROBE
+        const hue = (i * 30 + offset * 1500) % 360;
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+        ctx.lineWidth = 40 * scale;
+        ctx.stroke();
+      }
+
+      ctx.restore();
+      offset += speed;
+      requestAnimationFrame(render);
+    }
+  </script>
+</body>
+</html>
